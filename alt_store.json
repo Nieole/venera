@@ -13,15 +13,15 @@
       "bundleIdentifier": "com.github.wgh136.venera",
       "developerName": "wgh136",
       "subtitle": "A comic reader that supports reading local and network comics",
-      "version": "1.4.5",
-      "versionDate": "2025-06-18",
-      "versionDescription": "1. Fixed an abnormal single image height issue when \"imagesPerPage > 1\". 379  \r\n2. Fixed an invalid page calculation issue when \"showSingleImageOnFirstPage\" is enabled.  \r\n3. Fixed an issue with incorrect reading history when displaying a single image on the first page.  \r\n4. Fixed abnormal history recording when pages are not flipped. 392  \r\n5. Fixed an issue where the download task would stop after exiting the reader. 387  \r\n6. Fixed a \"RangeError\" when translating tags. 356  \r\n7. Reset the current folder to null on the favorites page if the folder is invalid. 389  \r\n8. Fixed various issues when using a custom download path on Android. 400  \r\n9. Set the initial chapter to the first downloaded chapter if no history exists when starting to read a local comic. 405  \r\n10. Removed the config file repository URL from the app.",
-      "downloadURL": "https://github.com/venera-app/venera/releases/download/v1.4.5/venera-ios-1.4.5%2B145.ipa",
+      "version": "1.5.1",
+      "versionDate": "2025-09-14",
+      "versionDescription": "1. Fix invalid top padding.\r\n2. On the comic details page, if loading fails and the comic has been downloaded, a read button will be displayed.\r\n3. Fallback to local cover if the favorite comic cover fails to load.\r\n4. Change page transition animation for Android.\r\n5. Use impeller renderer for Android.",
+      "downloadURL": "https://github.com/venera-app/venera/releases/download/v1.5.1/venera-ios-1.5.1%2B151.ipa",
       "localizedDescription": "A comic reader that supports reading local and network comics",
       "iconURL": "https://raw.githubusercontent.com/venera-app/venera/master/assets/app_icon.png",
       "tintColor": "#0784FC",
       "category": "utilities",
-      "size": 14960268,
+      "size": 15046587,
       "appPermissions": {
         "entitlements": [
           "application-identifier",
@@ -39,6 +39,13 @@
         }
       },
       "versions": [
+        {
+          "version": "1.5.1",
+          "date": "2025-09-14",
+          "localizedDescription": "1. Fix invalid top padding.\r\n2. On the comic details page, if loading fails and the comic has been downloaded, a read button will be displayed.\r\n3. Fallback to local cover if the favorite comic cover fails to load.\r\n4. Change page transition animation for Android.\r\n5. Use impeller renderer for Android.",
+          "downloadURL": "https://github.com/venera-app/venera/releases/download/v1.5.1/venera-ios-1.5.1%2B151.ipa",
+          "size": 15046587
+        },
         {
           "version": "1.4.5",
           "date": "2025-06-18",
@@ -59,6 +66,16 @@
       "tintColor": "#0784FC",
       "title": "v1.4.5 - Venera  18/06/25",
       "url": "https://github.com/venera-app/venera/releases/tag/v1.4.5"
+    },
+    {
+      "appID": "com.github.wgh136.venera",
+      "caption": "Update of Venera just got released!",
+      "date": "2025-09-14T11:01:30Z",
+      "identifier": "release-v1.5.1",
+      "notify": true,
+      "tintColor": "#0784FC",
+      "title": "v1.5.1 - Venera  14/09/25",
+      "url": "https://github.com/venera-app/venera/releases/tag/v1.5.1"
     }
   ]
 }
