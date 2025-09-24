@@ -85,6 +85,36 @@ class _NormalComicChaptersState extends State<_NormalComicChapters> {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (showDownloadCheckboxes) ...[
+                      Tooltip(
+                        message: "Select All".tl,
+                        child: IconButton(
+                          icon: const Icon(Icons.select_all),
+                          onPressed: () async {
+                            await LocalManager().markAllChaptersDownloadStatus(
+                              state.comic.id,
+                              state.comic.comicType,
+                              true,
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                      Tooltip(
+                        message: "Deselect All".tl,
+                        child: IconButton(
+                          icon: const Icon(Icons.deselect),
+                          onPressed: () async {
+                            await LocalManager().markAllChaptersDownloadStatus(
+                              state.comic.id,
+                              state.comic.comicType,
+                              false,
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
                     Tooltip(
                       message: "Mark Downloaded".tl,
                       child: IconButton(
@@ -310,6 +340,36 @@ class _GroupedComicChaptersState extends State<_GroupedComicChapters>
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (showDownloadCheckboxes) ...[
+                      Tooltip(
+                        message: "Select All".tl,
+                        child: IconButton(
+                          icon: const Icon(Icons.select_all),
+                          onPressed: () async {
+                            await LocalManager().markAllChaptersDownloadStatus(
+                              state.comic.id,
+                              state.comic.comicType,
+                              true,
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                      Tooltip(
+                        message: "Deselect All".tl,
+                        child: IconButton(
+                          icon: const Icon(Icons.deselect),
+                          onPressed: () async {
+                            await LocalManager().markAllChaptersDownloadStatus(
+                              state.comic.id,
+                              state.comic.comicType,
+                              false,
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    ],
                     Tooltip(
                       message: "Mark Downloaded".tl,
                       child: IconButton(
