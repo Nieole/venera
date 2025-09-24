@@ -493,6 +493,43 @@ class LocalManager with ChangeNotifier {
         .contains((chapters ?? comic.chapters)!.ids.elementAtOrNull(ep - 1));
   }
 
+  /// 手动标记章节的下载状态
+  Future<void> markChapterDownloadStatus(String id, ComicType type, String chapterId, bool isDownloaded) async {
+    var comic = find(id, type);
+    if (comic == null) return;
+    
+    var newDownloadedChapters = List<String>.from(comic.downloadedChapters);
+    
+    if (isDownloaded) {
+      // 添加章节到下载列表
+      if (!newDownloadedChapters.contains(chapterId)) {
+        newDownloadedChapters.add(chapterId);
+      }
+    } else {
+      // 从下载列表移除章节
+      newDownloadedChapters.remove(chapterId);
+    }
+    
+    // 更新数据库
+    if (newDownloadedChapters.isNotEmpty) {
+      _db.execute(
+        'UPDATE comics SET downloadedChapters = ? WHERE id = ? AND comic_type = ?;',
+        [
+          jsonEncode(newDownloadedChapters),
+          id,
+          type.value,
+        ],
+      );
+    } else {
+      _db.execute(
+        'DELETE FROM comics WHERE id = ? AND comic_type = ?;',
+        [id, type.value],
+      );
+    }
+    
+    notifyListeners();
+  }
+
   List<DownloadTask> downloadingTasks = [];
 
   bool isDownloading(String id, ComicType type) {

@@ -35,6 +35,8 @@ class _NormalComicChaptersState extends State<_NormalComicChapters> {
 
   late ComicChapters chapters;
 
+  bool showDownloadCheckboxes = false;
+
   @override
   void initState() {
     super.initState();
@@ -80,18 +82,36 @@ class _NormalComicChaptersState extends State<_NormalComicChapters> {
             SliverToBoxAdapter(
               child: ListTile(
                 title: Text("Chapters".tl),
-                trailing: Tooltip(
-                  message: "Order".tl,
-                  child: IconButton(
-                    icon: Icon(reverse
-                        ? Icons.vertical_align_top
-                        : Icons.vertical_align_bottom_outlined),
-                    onPressed: () {
-                      setState(() {
-                        reverse = !reverse;
-                      });
-                    },
-                  ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Tooltip(
+                      message: "Mark Downloaded".tl,
+                      child: IconButton(
+                        icon: Icon(showDownloadCheckboxes 
+                            ? Icons.check_box 
+                            : Icons.check_box_outline_blank),
+                        onPressed: () {
+                          setState(() {
+                            showDownloadCheckboxes = !showDownloadCheckboxes;
+                          });
+                        },
+                      ),
+                    ),
+                    Tooltip(
+                      message: "Order".tl,
+                      child: IconButton(
+                        icon: Icon(reverse
+                            ? Icons.vertical_align_top
+                            : Icons.vertical_align_bottom_outlined),
+                        onPressed: () {
+                          setState(() {
+                            reverse = !reverse;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -105,6 +125,8 @@ class _NormalComicChaptersState extends State<_NormalComicChapters> {
                   var key = chapters.ids.elementAt(i);
                   var value = chapters[key]!;
                   bool visited = (history?.readEpisode ?? {}).contains(i + 1);
+                  bool isDownloaded = LocalManager().isDownloaded(state.comic.id, state.comic.comicType, i + 1, chapters);
+                  
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
                     child: Material(
@@ -115,18 +137,47 @@ class _NormalComicChaptersState extends State<_NormalComicChapters> {
                         borderRadius: BorderRadius.circular(16),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Center(
-                            child: Text(
-                              value,
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: visited
-                                    ? context.colorScheme.outline
-                                    : null,
+                          child: Row(
+                            children: [
+                              if (showDownloadCheckboxes) ...[
+                                Checkbox(
+                                  value: isDownloaded,
+                                  onChanged: (bool? value) async {
+                                    if (value != null) {
+                                      await LocalManager().markChapterDownloadStatus(
+                                        state.comic.id,
+                                        state.comic.comicType,
+                                        key,
+                                        value,
+                                      );
+                                      setState(() {});
+                                    }
+                                  },
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    value,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: visited
+                                          ? context.colorScheme.outline
+                                          : null,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              if (isDownloaded && !showDownloadCheckboxes)
+                                Icon(
+                                  Icons.download_done_rounded,
+                                  size: 16,
+                                  color: context.colorScheme.primary,
+                                ),
+                            ],
                           ),
                         ),
                       ),
@@ -188,6 +239,8 @@ class _GroupedComicChaptersState extends State<_GroupedComicChapters>
   late TabController tabController;
 
   late int index;
+
+  bool showDownloadCheckboxes = false;
 
   @override
   void initState() {
@@ -254,18 +307,36 @@ class _GroupedComicChaptersState extends State<_GroupedComicChapters>
             SliverToBoxAdapter(
               child: ListTile(
                 title: Text("Chapters".tl),
-                trailing: Tooltip(
-                  message: "Order".tl,
-                  child: IconButton(
-                    icon: Icon(reverse
-                        ? Icons.vertical_align_top
-                        : Icons.vertical_align_bottom_outlined),
-                    onPressed: () {
-                      setState(() {
-                        reverse = !reverse;
-                      });
-                    },
-                  ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Tooltip(
+                      message: "Mark Downloaded".tl,
+                      child: IconButton(
+                        icon: Icon(showDownloadCheckboxes 
+                            ? Icons.check_box 
+                            : Icons.check_box_outline_blank),
+                        onPressed: () {
+                          setState(() {
+                            showDownloadCheckboxes = !showDownloadCheckboxes;
+                          });
+                        },
+                      ),
+                    ),
+                    Tooltip(
+                      message: "Order".tl,
+                      child: IconButton(
+                        icon: Icon(reverse
+                            ? Icons.vertical_align_top
+                            : Icons.vertical_align_bottom_outlined),
+                        onPressed: () {
+                          setState(() {
+                            reverse = !reverse;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -301,6 +372,8 @@ class _GroupedComicChaptersState extends State<_GroupedComicChapters>
                     visited = history!.readEpisode.contains(groupedIndex) ||
                         history!.readEpisode.contains(rawIndex);
                   }
+                  bool isDownloaded = LocalManager().isDownloaded(state.comic.id, state.comic.comicType, chapterIndex + 1, chapters);
+                  
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
                     child: Material(
@@ -311,18 +384,47 @@ class _GroupedComicChaptersState extends State<_GroupedComicChapters>
                         borderRadius: BorderRadius.circular(12),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Center(
-                            child: Text(
-                              value,
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: visited
-                                    ? context.colorScheme.outline
-                                    : null,
+                          child: Row(
+                            children: [
+                              if (showDownloadCheckboxes) ...[
+                                Checkbox(
+                                  value: isDownloaded,
+                                  onChanged: (bool? value) async {
+                                    if (value != null) {
+                                      await LocalManager().markChapterDownloadStatus(
+                                        state.comic.id,
+                                        state.comic.comicType,
+                                        key,
+                                        value,
+                                      );
+                                      setState(() {});
+                                    }
+                                  },
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    value,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: visited
+                                          ? context.colorScheme.outline
+                                          : null,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                              if (isDownloaded && !showDownloadCheckboxes)
+                                Icon(
+                                  Icons.download_done_rounded,
+                                  size: 16,
+                                  color: context.colorScheme.primary,
+                                ),
+                            ],
                           ),
                         ),
                       ),
