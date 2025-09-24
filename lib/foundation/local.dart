@@ -428,7 +428,7 @@ class LocalManager with ChangeNotifier {
       var sanitizedTitle = chapterTitle != null ? sanitizeFileName(chapterTitle) : null;
       // var newFormatDir = sanitizedTitle != null ? "${cid}_$sanitizedTitle" : null;
       
-      var newFormatPath = newFormatDir != null ? FilePath.join(directory.path, sanitizedTitle) : null;
+      var newFormatPath = sanitizedTitle != null ? FilePath.join(directory.path, sanitizedTitle) : null;
       var oldFormatPath = FilePath.join(directory.path, cid);
       
       // 优先使用新格式目录，如果不存在则使用旧格式
