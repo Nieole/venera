@@ -110,7 +110,13 @@ class ImagesDownloadTask extends DownloadTask with _TransferSpeedMixin {
         Directory(path!).deleteIgnoreError(recursive: true);
       } else if (chapters != null) {
         for (var c in chapters!) {
-          var dir = Directory(FilePath.join(path!, c));
+          // 使用章节标题作为目录名，而不是章节ID
+          var chapterTitle = comic?.chapters?.allChapters[c] ?? c;
+          // 清理章节标题中的非法字符
+          var sanitizedTitle = sanitizeFileName(chapterTitle);
+          // 添加章节ID前缀以确保唯一性和向后兼容性
+          // var directoryName = "${c}_$sanitizedTitle";
+          var dir = Directory(FilePath.join(path!, sanitizedTitle));
           if (dir.existsSync()) {
             dir.deleteSync(recursive: true);
           }
@@ -195,9 +201,16 @@ class ImagesDownloadTask extends DownloadTask with _TransferSpeedMixin {
       }
       Directory saveTo;
       if (comic!.chapters != null) {
+        // 使用章节标题作为目录名，而不是章节ID
+        var chapterId = _images!.keys.elementAt(_chapter);
+        var chapterTitle = comic!.chapters!.allChapters[chapterId] ?? chapterId;
+        // 清理章节标题中的非法字符
+        var sanitizedTitle = sanitizeFileName(chapterTitle);
+        // 添加章节ID前缀以确保唯一性和向后兼容性
+        // var directoryName = "${chapterId}_$sanitizedTitle";
         saveTo = Directory(FilePath.join(
           path!,
-          _images!.keys.elementAt(_chapter),
+          sanitizedTitle,
         ));
         if (!saveTo.existsSync()) {
           saveTo.createSync(recursive: true);

@@ -423,7 +423,23 @@ class LocalManager with ChangeNotifier {
     if (comic.hasChapters) {
       var cid =
           ep is int ? comic.chapters!.ids.elementAt(ep - 1) : (ep as String);
-      directory = Directory(FilePath.join(directory.path, cid));
+      // 智能查找章节目录：优先查找新格式（ID_标题），回退到旧格式（仅ID）
+      var chapterTitle = comic.chapters!.allChapters[cid];
+      var sanitizedTitle = chapterTitle != null ? sanitizeFileName(chapterTitle) : null;
+      // var newFormatDir = sanitizedTitle != null ? "${cid}_$sanitizedTitle" : null;
+      
+      var newFormatPath = newFormatDir != null ? FilePath.join(directory.path, sanitizedTitle) : null;
+      var oldFormatPath = FilePath.join(directory.path, cid);
+      
+      // 优先使用新格式目录，如果不存在则使用旧格式
+      if (newFormatPath != null && Directory(newFormatPath).existsSync()) {
+        directory = Directory(newFormatPath);
+      } else if (Directory(oldFormatPath).existsSync()) {
+        directory = Directory(oldFormatPath);
+      } else {
+        // 如果都不存在，使用新格式（用于新下载）
+        directory = Directory(newFormatPath ?? oldFormatPath);
+      }
     }
     var files = <File>[];
     await for (var entity in directory.list()) {
